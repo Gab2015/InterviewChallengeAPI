@@ -2,6 +2,7 @@ using BuberBreakfast.Models;
 using BuberBreakfast.Models.Persistence;
 using BuberBreakfast.ServiceErrors;
 using ErrorOr;
+using Microsoft.EntityFrameworkCore;
 
 namespace BuberBreakfast.Services.Breakfasts;
 
@@ -51,7 +52,8 @@ public class BreakfastService : IBreakfastService
         //var isNewlyCreated = !_breakfasts.ContainsKey(breakfast.Id);
         //_breakfasts[breakfast.Id] = breakfast;
 
-        var isNewlyCreated = _dbContext.breakfasts.Find(breakfast.Id) is not Breakfast dbBreakfast;
+        //var isNewlyCreated = _dbContext.breakfasts.AsNoTracking().FirstOrDefault(b => b.Id == breakfast.Id) is not Breakfast dbBreakfast;
+        var isNewlyCreated = !_dbContext.breakfasts.Any(b=> b.Id == breakfast.Id);
         if (isNewlyCreated) 
         {
             _dbContext.breakfasts.Add(breakfast);
